@@ -1,3 +1,4 @@
+import type React from "react";
 import type { ReactNode } from "react";
 
 export interface userDetails {
@@ -12,7 +13,14 @@ export interface CheckAuthenticationProps {
   children: ReactNode;
 }
 
-export type FieldType = "text" | "email" | "password" | "select" | "checkbox";
+export type FieldType =
+  | "text"
+  | "email"
+  | "password"
+  | "select"
+  | "checkbox"
+  | "textarea"
+  | "radio";
 
 export interface FormField {
   name: string;
@@ -25,9 +33,14 @@ export interface FormField {
 
 export interface DynamicFormProps {
   formControls: FormField[];
+  formData: Record<string, any>;
+  onChange: (e: React.ChangeEvent<any>) => void;
   buttonText?: string;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 export interface RenderFormFieldsProps {
   formItem: FormField;
+  value: any;
+  onChange: (e: React.ChangeEvent<any>) => void;
 }
