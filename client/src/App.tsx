@@ -30,9 +30,9 @@ function App() {
       <Route
         path="/auth"
         element={
-          <CheckAuthentication isAuthenticated={auth} userDetails={user}>
+          // <CheckAuthentication isAuthenticated={auth} userDetails={user}>
             <AuthLayout />
-          </CheckAuthentication>
+          // </CheckAuthentication>
         }
       >
         <Route path="login" element={<LoginPage />} />
