@@ -1,31 +1,31 @@
-import { useState } from "react";
-import DynamicForm from "../../components/Form/DynamicForm";
-import type { FormField } from "../../types";
+import { useState } from 'react';
+import DynamicForm from '../../components/Form/DynamicForm';
+import type { FormField } from '../../types';
 
 const LoginPage = () => {
   const loginFields: FormField[] = [
     {
-      name: "email",
-      label: "Email",
-      type: "email",
-      placeholder: "Enter your email",
+      name: 'email',
+      label: 'Email',
+      type: 'email',
+      placeholder: 'Enter your email',
     },
     {
-      name: "password",
-      label: "Password",
-      type: "password",
-      placeholder: "Enter your password",
+      name: 'password',
+      label: 'Password',
+      type: 'password',
+      placeholder: 'Enter your password',
     },
   ];
 
   const [loginFormValues, setLoginFormValues] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
-    setLoginFormValues((prev) => ({ ...prev, [name]: value }));
+    setLoginFormValues(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
