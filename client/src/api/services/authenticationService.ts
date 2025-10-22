@@ -1,6 +1,6 @@
 import apiClient from '../axios';
 
-interface userReposneData {
+export interface userReposneData {
   userId: string;
   displayName: string;
   username: string;
