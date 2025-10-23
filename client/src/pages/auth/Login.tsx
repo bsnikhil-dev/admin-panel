@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import DynamicForm from '../../components/Form/DynamicForm';
 import type { FormField } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { loginThunk } from '../../features/auth';
 
 const LoginPage = () => {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.authentication);
+
   const loginFields: FormField[] = [
     {
       name: 'email',
@@ -30,7 +35,7 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(loginFormValues);
+    dispatch(loginThunk(loginFormValues));
   };
 
   return (
