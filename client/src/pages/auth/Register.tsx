@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import DynamicForm from '../../components/Form/DynamicForm';
 import type { FormField } from '../../types';
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { registerThunk } from '../../features/auth';
 
 const RegisterPage = () => {
-  const { isAuthenticated, isLoading, user } = useAppSelector(state => state.authentication);
-  console.log(user, isAuthenticated, isLoading);
+  const dispatch = useAppDispatch();
   const registerFields: FormField[] = [
+    {
+      name: 'username',
+      label: 'User Name',
+      type: 'text',
+      placeholder: 'Enter User Name',
+    },
     {
       name: 'email',
       label: 'Email',
@@ -21,6 +27,7 @@ const RegisterPage = () => {
     },
   ];
   const [registerFormValues, setRegisterFormValues] = useState({
+    username: '',
     email: '',
     password: '',
   });
@@ -32,7 +39,7 @@ const RegisterPage = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(registerFormValues);
+    dispatch(registerThunk(registerFormValues));
   };
   return (
     <div className="div">

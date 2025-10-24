@@ -7,6 +7,8 @@ const apiClient: AxiosInstance = axios.create({
 
 const getHeaders = () => {
   return {
+    'ocp-apim-subscription-key': '1234567890abcdef1234567890abcdef',
+    correlationid: 'pooku',
     'content-type': 'application/json',
   };
 };

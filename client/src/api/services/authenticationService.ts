@@ -1,21 +1,22 @@
 import apiClient from '../axios';
 
-export interface userReposneData {
+export interface authenticationReposneBody {
+  token: string;
   userId: string;
-  displayName: string;
   username: string;
   email: string;
-  token: string;
+  role: string;
 }
 
 export const registerUser = async (userData: {
   username: string;
-  displayName: string;
   email: string;
   password: string;
-}): Promise<userReposneData> => {
+}): Promise<authenticationReposneBody> => {
   try {
-    const reposne = await apiClient.post<userReposneData>('/auth/register', userData);
+    const reposne = await apiClient.post<authenticationReposneBody>('/auth/register', userData, {
+      headers: { 'request-id': 'REGISTER_REQUEST_ID' },
+    });
     return reposne.data;
   } catch (error) {
     throw error;
@@ -25,9 +26,11 @@ export const registerUser = async (userData: {
 export const loginUser = async (userData: {
   email: string;
   password: string;
-}): Promise<userReposneData> => {
+}): Promise<authenticationReposneBody> => {
   try {
-    const reposne = await apiClient.post<userReposneData>('/auth/login', userData);
+    const reposne = await apiClient.post<authenticationReposneBody>('/auth/login', userData, {
+      headers: { 'request-id': 'LOGIN_REQUEST_ID' },
+    });
     return reposne.data;
   } catch (error) {
     throw error;
