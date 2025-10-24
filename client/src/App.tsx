@@ -1,28 +1,29 @@
-import { Routes, Route } from "react-router-dom";
-import "./App.css";
-import AuthLayout from "./components/auth/Layout";
-import LoginPage from "./pages/auth/Login";
-import RegisterPage from "./pages/auth/Register";
-import AdminLayout from "./components/admin-view/Layout";
-import AdminDashboardPage from "./pages/admin-view/DashBoardPage";
-import AdminOrdersdPage from "./pages/admin-view/OrdersPage";
-import AdminProductsdPage from "./pages/admin-view/ProductsPage";
-import ShoppingLayout from "./components/shopping-view/Layout";
-import NotFoundPage from "./pages/not-found";
-import HomePage from "./pages/shopping-view/Home";
-import CheckOutPage from "./pages/shopping-view/Checkout";
-import ListingPage from "./pages/shopping-view/Listing";
-import AccountPage from "./pages/shopping-view/Account";
-import CheckAuthentication from "./utils/utilityComponents/CheckAuthentication";
-import UnAuthorizedPage from "./pages/unautorized/UnAuthorizedPage";
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
+import AuthLayout from './components/auth/Layout';
+import LoginPage from './pages/auth/Login';
+import RegisterPage from './pages/auth/Register';
+import AdminLayout from './components/admin-view/Layout';
+import AdminDashboardPage from './pages/admin-view/DashBoardPage';
+import AdminOrdersdPage from './pages/admin-view/OrdersPage';
+import AdminProductsdPage from './pages/admin-view/ProductsPage';
+import ShoppingLayout from './components/shopping-view/Layout';
+import NotFoundPage from './pages/not-found';
+import HomePage from './pages/shopping-view/Home';
+import CheckOutPage from './pages/shopping-view/Checkout';
+import ListingPage from './pages/shopping-view/Listing';
+import AccountPage from './pages/shopping-view/Account';
+import CheckAuthentication from './utils/utilityComponents/CheckAuthentication';
+import UnAuthorizedPage from './pages/unautorized/UnAuthorizedPage';
+import { useAppSelector } from './app/hooks';
 
 function App() {
-  const auth = false;
+  const { isAuthenticated: auth } = useAppSelector(state => state.authentication);
   const user = {
-    userName: "Jhon",
-    email: "jhon@example.com",
-    password: "123456",
-    role: "admin",
+    userName: 'Jhon',
+    email: 'jhon@example.com',
+    password: '123456',
+    role: 'admin',
   };
 
   return (
@@ -30,13 +31,13 @@ function App() {
       <Route
         path="/auth"
         element={
-          // <CheckAuthentication isAuthenticated={auth} userDetails={user}>
+          <CheckAuthentication isAuthenticated={auth} userDetails={user}>
             <AuthLayout />
-          // </CheckAuthentication>
+          </CheckAuthentication>
         }
       >
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
+        <Route index element={<LoginPage />} />
+        {/* <Route path="register" element={<RegisterPage />} /> */}
       </Route>
       <Route
         path="/admin"
