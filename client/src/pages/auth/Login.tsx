@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import DynamicForm from '../../components/Form/DynamicForm';
+import { useEffect, useState } from 'react';
+import LoadingSpinner from '../../components/loadingSpinner/LoadingSpinner';
 import type { FormField } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { loginThunk } from '../../features/auth';
+import { registerThunk, loginThunk, resetErorr } from '../../features/auth';
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector(state => state.authentication);
+  const { isAuthenticated, isLoading, error } = useAppSelector(state => state.authentication);
 
   const loginFields: FormField[] = [
     {
@@ -31,7 +31,8 @@ const LoginPage = () => {
   });
 
   const [authType, setAuthType] = useState<boolean>(true);
-  const [showPassword, setShowPassword] = useState(false); // 👈 new state for toggling password
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [buttonDisable, setButtonDisable] = useState<boolean>(true);
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
@@ -40,9 +41,42 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(loginThunk(loginFormValues));
+    if (authType) {
+      dispatch(registerThunk(loginFormValues));
+    } else {
+      dispatch(loginThunk(loginFormValues));
+    }
   };
 
+  useEffect(() => {
+    if (authType) {
+      const allFilled =
+        loginFormValues.firstname.trim() !== '' &&
+        loginFormValues.lastname.trim() !== '' &&
+        loginFormValues.email.trim() !== '' &&
+        loginFormValues.password.trim() !== '';
+      setButtonDisable(!allFilled);
+    } else {
+      const allFilled =
+        loginFormValues.email.trim() !== '' && loginFormValues.password.trim() !== '';
+      setButtonDisable(!allFilled);
+    }
+  }, [loginFormValues, authType]);
+
+  useEffect(() => {
+    setLoginFormValues({
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: '',
+    });
+    setButtonDisable(true);
+    dispatch(resetErorr());
+  }, [authType]);
+
+  if (!isAuthenticated && isLoading) {
+    return <LoadingSpinner size="lg" centered={true} variant="dotted" blurBackground={true} />;
+  }
   return (
     <div className="max-w-md mx-auto border border-gray-200 rounded-2xl shadow-sm my-6 bg-white">
       <h1 className="text-center font-semibold text-2xl mt-5">{authType ? 'Sign Up' : 'Login'}</h1>
@@ -62,13 +96,14 @@ const LoginPage = () => {
       <form className="flex flex-col px-6 pb-6" onSubmit={handleSubmit}>
         {authType && (
           <div>
-            <label className="my-2 text-sm font-medium text-gray-700">Full Name</label>
+            <label className="my-2 text-sm font-medium text-gray-700">User Name</label>
             <div className="flex gap-2">
               <input
                 name="firstname"
                 className="w-1/2 border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-[#FF385C] focus:outline-none"
                 placeholder="First name"
                 type="text"
+                value={loginFormValues.firstname}
                 onChange={handleChange}
               />
               <input
@@ -76,6 +111,7 @@ const LoginPage = () => {
                 className="w-1/2 border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-[#FF385C] focus:outline-none"
                 placeholder="Last name"
                 type="text"
+                value={loginFormValues.lastname}
                 onChange={handleChange}
               />
             </div>
@@ -88,6 +124,7 @@ const LoginPage = () => {
           className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-[#FF385C] focus:outline-none"
           placeholder="Email"
           type="email"
+          value={loginFormValues.email}
           onChange={handleChange}
         />
 
@@ -98,6 +135,7 @@ const LoginPage = () => {
             className="w-full border border-gray-300 rounded-lg p-2 pr-10 text-sm focus:ring-2 focus:ring-[#FF385C] focus:outline-none"
             placeholder="Password"
             type={showPassword ? 'text' : 'password'}
+            value={loginFormValues.password}
             onChange={handleChange}
           />
 
@@ -145,9 +183,18 @@ const LoginPage = () => {
           </button>
         </div>
 
+        {error && (
+          <p className="mt-3 text-sm text-red-800 text-center bg-pink-50 rounded-md py-2">
+            {error}
+          </p>
+        )}
         <button
+          disabled={buttonDisable}
           type="submit"
-          className="mt-5 w-full bg-[#FF385C] text-white font-semibold py-3 rounded-lg hover:bg-[#E31C5F] transition-all duration-200 cursor-pointer"
+          className={`mt-5 w-full font-semibold py-3 rounded-lg transition-all duration-200 flex justify-center items-center
+          ${
+            buttonDisable ? 'bg-[#FF385C]/50 cursor-not-allowed' : 'bg-[#FF385C] hover:bg-[#E31C5F]'
+          } text-white`}
         >
           Continue
         </button>
