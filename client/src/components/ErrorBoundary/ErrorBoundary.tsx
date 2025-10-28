@@ -1,19 +1,24 @@
 import type { ReactNode } from 'react';
-import { useAppSelector } from '../../app/hooks';
-
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { clearErrorBoundary } from '../../features/errorBoundary';
 interface ErrorBoundaryProps {
   children: ReactNode;
 }
 
 const GlobalErrorBoundary = ({ children }: ErrorBoundaryProps) => {
-  const { errorMessage } = useAppSelector(state => state.errorBoundary);
+  const { errorMessage, retryAction } = useAppSelector(state => state.errorBoundary);
 
-  const clearErrorBoundary = () => {};
+  const dispatch = useAppDispatch();
+
+  const handleRetry = () => {
+    dispatch(clearErrorBoundary());
+    if (retryAction) retryAction();
+  };
   if (errorMessage) {
     return (
       <>
         <h1>Error :{errorMessage}</h1>
-        <button onClick={clearErrorBoundary}>Retry</button>
+        <button onClick={handleRetry}>Retry</button>
       </>
     );
   }
