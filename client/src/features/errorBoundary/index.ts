@@ -2,6 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface ErrorBoundaryType {
   errorMessage: string | null;
+  retryAction?: (() => void) | null;
 }
 
 const initialState: ErrorBoundaryType = {
@@ -12,11 +13,16 @@ const errorSlice = createSlice({
   name: 'errorBoundary',
   initialState,
   reducers: {
-    setErrorBoundary: (state, action: PayloadAction<string>) => {
-      state.errorMessage = action.payload;
+    setErrorBoundary: (
+      state,
+      action: PayloadAction<{ message: string; retryAction?: () => void }>
+    ) => {
+      state.errorMessage = action.payload.message;
+      state.retryAction = action.payload.retryAction;
     },
     clearErrorBoundary: state => {
       state.errorMessage = null;
+      state.retryAction = null;
     },
   },
 });

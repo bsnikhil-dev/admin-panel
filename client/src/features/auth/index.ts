@@ -5,6 +5,7 @@ import {
   type authenticationReposneBody,
 } from '../../api/services/authenticationService';
 import { AxiosError } from 'axios';
+import { setErrorBoundary } from '../errorBoundary';
 
 interface authInitialState {
   isAuthenticated: boolean;
@@ -45,14 +46,22 @@ export const registerThunk = createAsyncThunk<
   authenticationReposneBody,
   SignUpData,
   { rejectValue: ApiError }
->('post/registerUser', async (userData, { rejectWithValue }) => {
+>('post/registerUser', async (userData, { dispatch, rejectWithValue }) => {
+  const { firstname, lastname } = userData;
+  const data = { username: firstname + ' ' + lastname, ...userData };
   try {
-    const { firstname, lastname } = userData;
-    const data = { username: firstname + ' ' + lastname, ...userData };
     const response = await registerUser(data);
     return response;
   } catch (error: any) {
     if (error instanceof AxiosError) {
+      if (!error.response) {
+        dispatch(
+          setErrorBoundary({
+            message: 'Techincal Error.Please Try Again',
+            retryAction: () => dispatch(registerThunk(data)),
+          })
+        );
+      }
       return rejectWithValue(error.response?.data);
     }
     return rejectWithValue(error.response?.data);
@@ -63,12 +72,20 @@ export const loginThunk = createAsyncThunk<
   authenticationReposneBody,
   LoginData,
   { rejectValue: ApiError }
->('post/loginUser', async (userData, { rejectWithValue }) => {
+>('post/loginUser', async (userData, { dispatch, rejectWithValue }) => {
   try {
     const response = await loginUser(userData);
     return response;
   } catch (error: any) {
     if (error instanceof AxiosError) {
+      if (!error.response) {
+        dispatch(
+          setErrorBoundary({
+            message: 'Techincal Error.Please Try Again',
+            retryAction: () => dispatch(loginThunk(userData)),
+          })
+        );
+      }
       return rejectWithValue(error.response?.data);
     }
     return rejectWithValue(error.response?.data);

@@ -37,7 +37,6 @@ function App() {
         }
       >
         <Route index element={<LoginPage />} />
-        {/* <Route path="register" element={<RegisterPage />} /> */}
       </Route>
       <Route
         path="/admin"
