@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import AuthLayout from './components/auth/Layout';
 import LoginPage from './pages/auth/Login';
-import RegisterPage from './pages/auth/Register';
 import AdminLayout from './components/admin-view/Layout';
 import AdminDashboardPage from './pages/admin-view/DashBoardPage';
 import AdminOrdersdPage from './pages/admin-view/OrdersPage';
@@ -18,14 +17,7 @@ import UnAuthorizedPage from './pages/unautorized/UnAuthorizedPage';
 import { useAppSelector } from './app/hooks';
 
 function App() {
-  const { isAuthenticated: auth } = useAppSelector(state => state.authentication);
-  const user = {
-    userName: 'Jhon',
-    email: 'jhon@example.com',
-    password: '123456',
-    role: 'admin',
-  };
-
+  const { isAuthenticated: auth, user } = useAppSelector(state => state.authentication);
   return (
     <Routes>
       <Route
@@ -53,9 +45,9 @@ function App() {
       <Route
         path="/shop"
         element={
-          <CheckAuthentication isAuthenticated={auth} userDetails={user}>
-            <ShoppingLayout />
-          </CheckAuthentication>
+          // <CheckAuthentication isAuthenticated={auth} userDetails={user}>
+          <ShoppingLayout />
+          // </CheckAuthentication>
         }
       >
         <Route path="home" element={<HomePage />} />

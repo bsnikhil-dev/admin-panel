@@ -1,27 +1,11 @@
 import { useEffect, useState } from 'react';
 import LoadingSpinner from '../../components/loadingSpinner/LoadingSpinner';
-import type { FormField } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { registerThunk, loginThunk, resetErorr } from '../../features/auth';
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, isLoading, error } = useAppSelector(state => state.authentication);
-
-  const loginFields: FormField[] = [
-    {
-      name: 'email',
-      label: 'Email',
-      type: 'email',
-      placeholder: 'Enter your email',
-    },
-    {
-      name: 'password',
-      label: 'Password',
-      type: 'password',
-      placeholder: 'Enter your password',
-    },
-  ];
 
   const [loginFormValues, setLoginFormValues] = useState({
     firstname: '',
@@ -30,7 +14,7 @@ const LoginPage = () => {
     password: '',
   });
 
-  const [authType, setAuthType] = useState<boolean>(true);
+  const [authType, setAuthType] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [buttonDisable, setButtonDisable] = useState<boolean>(true);
 

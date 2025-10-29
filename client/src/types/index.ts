@@ -1,10 +1,10 @@
-import type React from "react";
-import type { ReactNode } from "react";
+import type React from 'react';
+import type { ReactNode } from 'react';
 
 export interface userDetails {
-  userName: string;
+  username: string;
   email: string;
-  password: string;
+  password?: string;
   role: string;
 }
 export interface CheckAuthenticationProps {
@@ -14,13 +14,13 @@ export interface CheckAuthenticationProps {
 }
 
 export type FieldType =
-  | "text"
-  | "email"
-  | "password"
-  | "select"
-  | "checkbox"
-  | "textarea"
-  | "radio";
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'select'
+  | 'checkbox'
+  | 'textarea'
+  | 'radio';
 
 export interface FormField {
   name: string;
