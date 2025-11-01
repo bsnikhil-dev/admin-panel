@@ -44,3 +44,14 @@ export interface RenderFormFieldsProps {
   value: any;
   onChange: (e: React.ChangeEvent<any>) => void;
 }
+
+export interface Destination {
+  title: string;
+  description: string;
+}
+export interface SearchDropDownProps {
+  showSearchDropDown: boolean;
+  setShowSearchDropDown: React.Dispatch<React.SetStateAction<boolean>>;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+  destinationList: Destination[];
+}
