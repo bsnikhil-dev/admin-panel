@@ -1,16 +1,46 @@
+import { useState, type ChangeEvent } from 'react';
 import logo from '../../assets/logo.png';
+import SearchDropDown from '../searchDropDown/SearchDropDown';
+import { filterDestinations } from '../../utils/utilityFunctions/Common';
+import type { Destination } from '../../types';
+import { destinations } from '../../constants/data';
+
 const ShoppingHeader = () => {
+  const [showSearchDropDown, setShowSearchDropDown] = useState<boolean>(false);
+  const [destination, setDestination] = useState<string>('');
+  const [filteredDestinations, setFilteredDestinations] = useState<Destination[]>(destinations);
+
+  const handleDestinationInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const filtered = filterDestinations(e.target.value.toLowerCase());
+    setFilteredDestinations(filtered);
+  };
+  const handleSearchButton = () => {
+    console.log(destination);
+  };
   return (
     <div className="bg-gray-200">
       <nav className="flex px-10 py-6 justify-between items-center">
         <img src={logo} className="w-15 h-15 rounded-full" />
         <div className="flex items-center bg-white rounded-full px-4 py-2 shadow-xl mx-auto">
-          <div className="flex flex-col w-md cursor-pointer border-r border-gray-300  px-4">
+          <div className="flex flex-col w-md cursor-pointer border-r border-gray-300 px-4 relative">
             <label className="text-xs font-semibold text-gray-500">Where</label>
             <input
               type="text"
               placeholder="Search destinations"
+              value={destination}
               className="text-sm text-gray-700 placeholder-gray-400 focus:outline-none"
+              onChange={e => {
+                setDestination(e.target.value);
+                setShowSearchDropDown(true);
+                handleDestinationInput(e);
+              }}
+              onFocus={() => setShowSearchDropDown(true)}
+            />
+            <SearchDropDown
+              showSearchDropDown={showSearchDropDown}
+              setShowSearchDropDown={setShowSearchDropDown}
+              setSearchValue={setDestination}
+              destinationList={filteredDestinations}
             />
           </div>
           <div className="flex flex-col w-md  px-4">
@@ -21,7 +51,10 @@ const ShoppingHeader = () => {
               className="text-sm text-gray-700 placeholder-gray-400 focus:outline-none"
             />
           </div>
-          <button className="bg-rose-400 hover:bg-rose-500 text-white p-3 rounded-full ml-2">
+          <button
+            className="bg-rose-400 hover:bg-rose-500 text-white p-3 rounded-full ml-2"
+            onClick={handleSearchButton}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
